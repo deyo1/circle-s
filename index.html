@@ -1,142 +1,145 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<title>Circle</title>
+    <title>Circle</title>
 
-<style>
+    <style>
+        input {
+            width: 40px;
+        }
 
-input {
-width: 40px;
-}
-
-#myCanvas {
-border: 1px solid black;
-}
-
-</style>
+        #myCanvas {
+            border: 1px solid black;
+        }
+    </style>
 
 </head>
 
 <body onload="apply()">
 
-<canvas id="myCanvas" width="450" height="450"></canvas>
-<div>
-<ul>
-<li>Width <input id="width" type="number" value="450"></input> and height<input id="height" type="number" value="450"></input> of box.</li>
-<li>Number of circles  <input id="numberOfCircles" type="number" value="10"></input></li>
-<li>Size of circles from <input id="sizeMin" type="number" value="2"></input> to <input id="sizeMax" type="number" value="10"></input></li>
-<li>Speed of circles from <input id="speedMin" type="number" value="1"></input> to <input id="speedMax" type="number" value="5"></input></li>
-<li><button onClick="apply()">Apply</button></li>
-</ul>
-<button id="startStop" onClick="startStop()">Start</button>
-<button onClick="reset()">Reset</button>
-</div>
+    <canvas id="myCanvas" width="450" height="450"></canvas>
+    <div>
+        <ul>
+            <li>Width <input id="width" type="number" value="450"></input> and height<input id="height" type="number"
+                    value="450"></input> of box.</li>
+            <li>Number of circles <input id="numberOfCircles" type="number" value="10"></input></li>
+            <li>Size of circles from <input id="sizeMin" type="number" value="2"></input> to <input id="sizeMax"
+                    type="number" value="10"></input></li>
+            <li>Speed of circles from <input id="speedMin" type="number" value="1"></input> to <input id="speedMax"
+                    type="number" value="5"></input></li>
+            <li><button onClick="apply()">Apply</button></li>
+        </ul>
+        <button id="startStop" onClick="startStop()">Start</button>
+        <button onClick="reset()">Reset</button>
+    </div>
 
-<script>
+    <script>
 
-var canvas = document.getElementById("myCanvas");
-var ctx = canvas.getContext("2d");
+        var canvas = document.getElementById("myCanvas");
+        var ctx = canvas.getContext("2d");
 
-class Circle {
+        class Circle {
 
-constructor(cx, cy, dx, dy, r) {
-this.cx = cx;
-this.cy = cy;
-this.dx = dx;
-this.dy = dy;
-this.r = r;
-}
+            constructor(cx, cy, dx, dy, r) {
+                this.cx = cx;
+                this.cy = cy;
+                this.dx = dx;
+                this.dy = dy;
+                this.r = r;
+            }
 
-draw() {
-ctx.beginPath();
-ctx.arc(this.cx, this.cy, this.r, 0, 2*Math.PI);
-ctx.stroke();
-}
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.cx, this.cy, this.r, 0, 2 * Math.PI);
+                ctx.stroke();
+            }
 
-changePosition() {
-if(this.cx + this.r + this.dx >= canvas.width || this.cx - this.r + this.dx <= 0) 
-this.dx *= -1;
-this.cx += this.dx;
-if(this.cy + this.r + this.dy >= canvas.height || this.cy - this.r + this.dy <= 0)
-this.dy *= -1;
-this.cy += this.dy;
-}
-}
+            changePosition() {
+                if (this.cx + this.r + this.dx >= canvas.width || this.cx - this.r + this.dx <= 0)
+                    this.dx *= -1;
+                this.cx += this.dx;
+                if (this.cy + this.r + this.dy >= canvas.height || this.cy - this.r + this.dy <= 0)
+                    this.dy *= -1;
+                this.cy += this.dy;
+            }
+        }
 
-var circles = [];
-var numberOfCircles;
-var sizeMin;
-var sizeMax;
-var speedMin;
-var speedMax;
+        var circles = [];
+        var numberOfCircles;
+        var sizeMin;
+        var sizeMax;
+        var speedMin;
+        var speedMax;
 
-function generateCircle() {
-let r = Math.random()*(sizeMax - sizeMin) + parseInt(sizeMin);
-let cx = Math.random()*(canvas.width - 2*r) + r;
-let cy = Math.random()*(canvas.height - 2*r) + r;
-let dx = (1 - 2*Math.floor(Math.random() + 0.5))*(Math.random()*(speedMax - speedMin) + parseInt(speedMin))/20;
-let dy = (1 - 2*Math.floor(Math.random() + 0.5))*(Math.random()*(speedMax - speedMin) + parseInt(speedMin))/20;
-return (new Circle(cx, cy, dx, dy, r));
-}
-
-
-function apply() {
-canvas.width = document.getElementById("width").value;
-canvas.height = document.getElementById("height").value;
-numberOfCircles = document.getElementById("numberOfCircles").value;
-sizeMin = document.getElementById("sizeMin").value;
-sizeMax = document.getElementById("sizeMax").value;
-speedMin = document.getElementById("speedMin").value;
-speedMax = document.getElementById("speedMax").value;
-circles = new Array();
-for(i = 0; i < numberOfCircles; i++) {
-circles.push(generateCircle());
-}
-}
-
-function animate() {
-ctx.clearRect(0, 0, canvas.width, canvas.height);
-for(i = 0; i < numberOfCircles; i++) {
-circles[i].draw();
-circles[i].changePosition();
-}
-}
-
-var animateCircles;
-var start = 0;
-
-function startStop() {
-if(start == 0) {
-document.getElementById("startStop").innerHTML = "Stop";
-animateCircles = setInterval(animate, 5);
-start++;
-}
-else {
-document.getElementById("startStop").innerHTML = "Start";
-clearInterval(animateCircles);
-start--;
-}
-}
+        function generateCircle() {
+            let r = Math.random() * (sizeMax - sizeMin) + parseInt(sizeMin);
+            let cx = Math.random() * (canvas.width - 2 * r) + r;
+            let cy = Math.random() * (canvas.height - 2 * r) + r;
+            let dx = (1 - 2 * Math.floor(Math.random() + 0.5)) * (Math.random() * (speedMax - speedMin) + parseInt(speedMin)) / 20;
+            let dy = (1 - 2 * Math.floor(Math.random() + 0.5)) * (Math.random() * (speedMax - speedMin) + parseInt(speedMin)) / 20;
+            return (new Circle(cx, cy, dx, dy, r));
+        }
 
 
-function reset() {
-circles = new Array();
-document.getElementById("numberOfCircles").value = 10;
-document.getElementById("sizeMin").value = 2;
-document.getElementById("sizeMax").value = 10;
-document.getElementById("speedMin").value = 1;
-document.getElementById("speedMax").value = 5;
-ctx.clearRect(0, 0, canvas.width, canvas.height);
-apply();
-if(start == 0) 
-return;
-else {
-document.getElementById("startStop").innerHTML = "Start";
-clearInterval(animateCircles);
-start--;
-}
-}
-</script> 
+        function apply() {
+            canvas.width = document.getElementById("width").value;
+            canvas.height = document.getElementById("height").value;
+            numberOfCircles = document.getElementById("numberOfCircles").value;
+            sizeMin = document.getElementById("sizeMin").value;
+            sizeMax = document.getElementById("sizeMax").value;
+            speedMin = document.getElementById("speedMin").value;
+            speedMax = document.getElementById("speedMax").value;
+            circles = new Array();
+            for (i = 0; i < numberOfCircles; i++) {
+                circles.push(generateCircle());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (i = 0; i < numberOfCircles; i++) {
+                circles[i].draw();
+                circles[i].changePosition();
+            }
+        }
+
+        var animateCircles;
+        var start = 0;
+
+        function startStop() {
+            if (start == 0) {
+                document.getElementById("startStop").innerHTML = "Stop";
+                animateCircles = setInterval(animate, 5);
+                start++;
+            }
+            else {
+                document.getElementById("startStop").innerHTML = "Start";
+                clearInterval(animateCircles);
+                start--;
+            }
+        }
+
+
+        function reset() {
+            circles = new Array();
+            document.getElementById("numberOfCircles").value = 10;
+            document.getElementById("sizeMin").value = 2;
+            document.getElementById("sizeMax").value = 10;
+            document.getElementById("speedMin").value = 1;
+            document.getElementById("speedMax").value = 5;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            apply();
+            if (start == 0)
+                return;
+            else {
+                document.getElementById("startStop").innerHTML = "Start";
+                clearInterval(animateCircles);
+                start--;
+            }
+        }
+    </script>
 
 </body>
+
 </html>
